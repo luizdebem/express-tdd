@@ -13,23 +13,26 @@ const app = require("./app.js");
 
 describe("Todos API tests", () => {
   it("should return an array of todos", () => {
-    return request(app).get("/todos")
+    return request(app)
+      .get("/todos")
       .expect('Content-Type', /json/)
       .expect(200)
-      .then(res => {
+      .then((res) => {
         expect(res.body).toEqual(
-          expect.arrayContaining(
+          expect.arrayContaining([
             expect.objectContaining({
+              id: expect.any(Number),
               name: expect.any(String),
               completed: expect.any(Boolean)
             })
-          )
+          ])
         );
       });
   });
 
   it("should return an specific todo by id", () => {
-    return request(app).get("/todos/1")
+    return request(app)
+      .get("/todos/1")
       .expect('Content-Type', /json/)
       .expect(200)
       .then(res => {
@@ -47,9 +50,10 @@ describe("Todos API tests", () => {
   });
 
   it("should return a newly created todo", () => {
-    return request(app).post("/todos").send({
-      name: "do dishes"
-    })
+    return request(app)
+      .post("/todos").send({
+        name: "do dishes"
+      })
       .expect('Content-Type', /json/)
       .expect(201)
       .then(res => {
@@ -62,7 +66,7 @@ describe("Todos API tests", () => {
       });
   });
 
-  it("validates a request body", () => {
-    return request(app).post("/todos").send({name: 123}).expect(422);
+  it("validates a request body for todo creation", () => {
+    return request(app).post("/todos").send({ name: 123 }).expect(422);
   });
 });
